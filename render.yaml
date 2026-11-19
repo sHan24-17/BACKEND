@@ -1,0 +1,61 @@
+services:
+  - type: web
+    name: backend-api-shan24-17
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci && npx prisma generate && npx prisma db push --skip-generate && npm run db:seed
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_VERSION
+        value: v1
+      - key: CORS_ORIGIN
+        value: https://shan24-17.github.io
+      - key: DB_POOL_MAX
+        value: "20"
+      - key: DB_IDLE_TIMEOUT
+        value: "30000"
+      - key: DB_CONNECTION_TIMEOUT
+        value: "5000"
+      - key: DEFAULT_PAGE
+        value: "1"
+      - key: DEFAULT_LIMIT
+        value: "10"
+      - key: MAX_LIMIT
+        value: "100"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bd-dp-prueba
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: bd-dp-prueba
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: bd-dp-prueba
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: bd-dp-prueba
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: bd-dp-prueba
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: bd-dp-prueba
+          property: database
+
+databases:
+  - name: bd-dp-prueba
+    plan: free
+    region: oregon
+    databaseName: bd_dp_prueba
+    user: backend_user
